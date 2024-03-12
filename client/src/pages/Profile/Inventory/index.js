@@ -50,7 +50,6 @@ const Inventory = () => {
       const response = await GetInventory();
       dispatch(SetLoading(false));
       if (response.success) {
-        console.log(response.data);
         setData(response.data);
       } else {
         dispatch(SetLoading(false));
