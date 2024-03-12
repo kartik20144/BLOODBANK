@@ -1,7 +1,7 @@
 import { Form, Input, Modal, Radio, Select, message } from "antd";
 import React, { useState } from "react";
 import { getAntdInputValidation } from "../../../utils/helpers";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SetLoading } from "../../../redux/loadersSlice";
 import { AddInventory } from "../../../apicalls/inventory";
 
@@ -9,6 +9,7 @@ const InventoryForm = ({ open, setOpen, reloadData }) => {
   const [inventoryType, setInventoryType] = useState();
   const [form] = Form.useForm();
   const dispatch = useDispatch();
+  const { currentUser } = useSelector((state) => state.users);
 
   const onFinish = async (values) => {
     try {
@@ -16,9 +17,11 @@ const InventoryForm = ({ open, setOpen, reloadData }) => {
       const response = await AddInventory({
         ...values,
         inventoryType,
+        organization: currentUser._id,
       });
       dispatch(SetLoading(false));
       if (response.success) {
+        reloadData();
         message.success("Inventory Added Successfully");
         setOpen(false);
       } else {

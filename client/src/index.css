@@ -72,3 +72,8 @@ i{
 .ant-form-item-label {
   padding: 0 !important;
 }
+
+table {
+  border: 1px solid #9f9f9f !important;
+  border-radius: 2px !important;
+}
