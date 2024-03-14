@@ -111,7 +111,7 @@ router.get("/get", authMiddleware, async (req, res) => {
 //get inventory
 router.post("/filter", authMiddleware, async (req, res) => {
   try {
-    const inventory = await Inventory.find(req.body.filters)
+    const inventory = await Inventory.find(req.body.filters).limit(req.body.limit || 10)
       .sort({ createdAt: -1 })
       .populate("donar")
       .populate("hospital")
