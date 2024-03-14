@@ -41,7 +41,7 @@ const ProtectedPage = ({ children }) => {
       <div>
         {/* {Header} */}
         <div className="flex justify-between items-center bg-primary text-white px-5 py-3">
-          <div>
+          <div onClick={() => navigate("/")} className='cursor-pointer'>
             <h1 className="text-2xl">BLOODBANK</h1>
             <span className="text-xs">
               {currentUser.userType.toUpperCase()}
@@ -50,8 +50,9 @@ const ProtectedPage = ({ children }) => {
           <div className="flex items-center gap-1">
             <i className="ri-shield-user-line"></i>
             <div className="flex flex-col">
-              <span className="mr-5 text-md cursor-pointer"
-              onClick={() => navigate("/profile")}
+              <span
+                className="mr-5 text-md cursor-pointer"
+                onClick={() => navigate("/profile")}
               >
                 {getLoggedInUserName(currentUser).toUpperCase()}
               </span>
