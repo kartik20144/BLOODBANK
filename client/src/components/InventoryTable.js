@@ -28,7 +28,15 @@ const InventoryTable = ({ filters, userType, limit }) => {
     {
       title: "Reference",
       dataIndex: "reference",
-      render: (text, record) => record.organization.organizationName,
+      render: (text, record) => {
+        if (userType === "organization") {
+          return record.inventoryType === "in"
+            ? record.donar?.name
+            : record.hospital?.hospitalName;
+        } else {
+          return record.organization.organizationName;
+        }
+      },
     },
     {
       title: "Date",
@@ -40,10 +48,9 @@ const InventoryTable = ({ filters, userType, limit }) => {
   if (userType !== "organization") {
     columns.splice(0, 1);
     columns[2].title = "Organization Name";
-    columns[3].title = userType === 'hospital' ? "Taken Date" : "Danated Date"
+    columns[3].title = userType === "hospital" ? "Taken Date" : "Danated Date";
   }
 
-  
   const getData = async () => {
     try {
       dispatch(SetLoading(true));
