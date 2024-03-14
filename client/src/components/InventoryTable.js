@@ -37,10 +37,17 @@ const InventoryTable = ({ filters, userType, limit }) => {
     },
   ];
 
+  if (userType !== "organization") {
+    columns.splice(0, 1);
+    columns[2].title = "Organization Name";
+    columns[3].title = userType === 'hospital' ? "Taken Date" : "Danated Date"
+  }
+
+  
   const getData = async () => {
     try {
       dispatch(SetLoading(true));
-      const response = await GetInventoryWithFilters( filters, limit );
+      const response = await GetInventoryWithFilters(filters, limit);
       dispatch(SetLoading(false));
       if (response.success) {
         setData(response.data);
