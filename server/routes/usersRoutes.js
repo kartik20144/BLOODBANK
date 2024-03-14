@@ -6,6 +6,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const Inventory = require("../models/inventoryModel");
 const { default: mongoose } = require("mongoose");
 
+//register user
 router.post("/register", async (req, res) => {
   try {
     const userexists = await User.findOne({ email: req.body.email });
@@ -35,6 +36,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
+//login user
 router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
@@ -80,6 +82,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
+//get current user
 router.get("/get-current-user", authMiddleware, async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.body.userId });
@@ -148,5 +151,65 @@ router.get("/get-all-hospitals", authMiddleware, async (req, res) => {
     });
   }
 });
+
+//get all unique organization for a donar
+router.get(
+  "/get-all-organizations-of-a-donar",
+  authMiddleware,
+  async (req, res) => {
+    try {
+      // get all unique hospital ids from inventory
+      const donar = new mongoose.Types.ObjectId(req.body.userId);
+      const uniqueOrganizationIds = await Inventory.distinct("organization", {
+        donar,
+      });
+
+      const hospital = await User.find({
+        _id: { $in: uniqueOrganizationIds },
+      });
+
+      return res.send({
+        success: true,
+        message: "Hospitals fetched successfully",
+        data: hospital,
+      });
+    } catch (error) {
+      return res.send({
+        success: false,
+        message: "Hospitals fetched successfully",
+      });
+    }
+  }
+);
+
+//get all unique organization for a hospital
+router.get(
+  "/get-all-organizations-of-a-hospital",
+  authMiddleware,
+  async (req, res) => {
+    try {
+      // get all unique organization ids from inventory
+      const hospital = new mongoose.Types.ObjectId(req.body.userId);
+      const uniqueOrganizationIds = await Inventory.distinct("organization", {
+        hospital,
+      });
+
+      const hospitals = await User.find({
+        _id: { $in: uniqueOrganizationIds },
+      });
+
+      return res.send({
+        success: true,
+        message: "Hospitals fetched successfully",
+        data: hospitals,
+      });
+    } catch (error) {
+      return res.send({
+        success: false,
+        message: "Hospitals fetched successfully",
+      });
+    }
+  }
+);
 
 module.exports = router;

@@ -87,6 +87,7 @@ router.post("/add", authMiddleware, async (req, res) => {
   }
 });
 
+//get inventory
 router.get("/get", authMiddleware, async (req, res) => {
   try {
     const inventory = await Inventory.find({
@@ -95,6 +96,26 @@ router.get("/get", authMiddleware, async (req, res) => {
       .sort({ createdAt: -1 })
       .populate("donar")
       .populate("hospital");
+    return res.send({
+      success: true,
+      data: inventory,
+    });
+  } catch (error) {
+    return res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+//get inventory
+router.post("/filter", authMiddleware, async (req, res) => {
+  try {
+    const inventory = await Inventory.find(req.body.filters)
+      .sort({ createdAt: -1 })
+      .populate("donar")
+      .populate("hospital")
+      .populate("organization");
     return res.send({
       success: true,
       data: inventory,
